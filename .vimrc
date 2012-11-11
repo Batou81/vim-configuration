@@ -20,6 +20,10 @@ Bundle 'tpope/vim-ragtag'
 Bundle 'tpope/vim-surround'
 " Runtime files for Haml, Sass and Scss
 Bundle 'tpope/vim-haml'
+" Markdown preview
+Bundle 'waylan/vim-markdown-extra-preview'
+" Toggle comment/uncomment lines
+Bundle 'vim-scripts/tComment'
 " Handle the expansion to full HTML code 
 Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
 " vim-scripts repos
@@ -27,6 +31,8 @@ Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
 Bundle 'L9'
 " FuzzyFinder
 Bundle 'FuzzyFinder'
+" PEP8
+Bundle 'vim-scripts/pep8.git'
 " Others repos
 
 
@@ -36,6 +42,8 @@ Bundle 'FuzzyFinder'
 filetype on
 set nocompatible
 set hidden
+" Set system clipboard
+set clipboard=unnamed
 
 " Enable filetype plugin
 filetype plugin on
@@ -43,7 +51,6 @@ filetype indent on
 
 " Enable syntax colors
 syntax on
-
 syntax enable
 
 " Set to auto read when a file is changed from the outside
@@ -53,7 +60,6 @@ set autoread
 " like <leader>w saves the current file
 let mapleader = ","
 let g:mapleader = ","
-
 
 " When vimrc is edited, reload it
 autocmd! bufwritepost vimrc source ~/.vim_runtime/vimrc
@@ -65,7 +71,7 @@ colorscheme slate
 """""""""""""""""""""""""
 " - VIM user interface -"
 """""""""""""""""""""""""
-" Set 7 lines to the curors - when moving vertical..
+" Set 7 lines to the cursors - when moving vertical..
 set so=7
 
 set showmode " Show what mode you're in
@@ -102,7 +108,8 @@ set mat=2 "How many tenths of a second to blink
 " No sound on errors
 set noerrorbells
 set novisualbell
-set t_vb=
+set vb t_vb=
+au GUIEnter * set vb t_vb=
 set tm=500
 
 
@@ -152,7 +159,7 @@ set wrap "Wrap lines
 " Fast saving
 nmap <leader>w :w<cr>
 " Fast quit
-nmap <leader>q :wq<cr>
+nmap <leader>q :q<cr>
 " Quit all
 nmap <leader>qa :wqa<cr>
 " Clear search
@@ -169,6 +176,12 @@ map <leader><left> gT<cr>
 inoremap <M-o> <Esc>o
 inoremap <C-j> <Down>
 let g:ragtag_global_maps = 1
+" Allow the . to execute once for echa line of a visual selection
+vnoremap . :normal .<CR>
+" ACK
+nmap <leader>a <Esc>:Ack!
+" PEP8
+let g:pep8_map='<leader>8'
 
 
 """"""""""""""""""
@@ -201,6 +214,13 @@ inoremap $e ""<esc>i
 inoremap $t <><esc>i
 
 
+""""""""""""""""""""
+" - Code Folding - "
+""""""""""""""""""""
+set foldmethod=indent
+set foldlevel=99
+
+
 """""""""""""""""""""""""""""""
 " - Omni complete functions - "
 """""""""""""""""""""""""""""""
@@ -211,3 +231,25 @@ autocmd FileType css set omnifunc=csscomplete#CompleteCSS
 autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
 autocmd FileType php set omnifunc=phpcomplete#CompletePHP
 autocmd FileType c set omnifunc=ccomplete#Complete
+set completeopt=menuone,longest,preview
+
+
+""""""""""""""
+" - Syntax - "
+""""""""""""""
+" Use javascript syntax for .db files (for MongoDB files)
+au BufNewFile,BufRead *.db set filetype=javascript
+
+
+""""""""""""""""""""
+" - GVim options - "
+""""""""""""""""""""
+if has("gui_running")
+    ""Maximize gvim window.
+    set lines=999 columns=999
+    " Removing bars and scroll bars
+    " set guioptions-=m ""remove menu bar
+    set guioptions-=T ""remove tool bar
+    set guioptions+=LlRrb ""add scroll lines
+    set guioptions-=LlRrb ""remove scroll lines
+endif
