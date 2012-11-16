@@ -24,6 +24,8 @@ Bundle 'tpope/vim-haml'
 Bundle 'waylan/vim-markdown-extra-preview'
 " Toggle comment/uncomment lines
 Bundle 'vim-scripts/tComment'
+" jedi-vim autocomplete
+Bundle 'davidhalter/jedi-vim'
 " Handle the expansion to full HTML code 
 Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
 " vim-scripts repos
@@ -153,6 +155,13 @@ set si "Smart indet
 set wrap "Wrap lines
 
 
+""""""""""""""""""""
+" - Autocomplete - "
+""""""""""""""""""""
+let g:jedi#auto_initialization = 1
+let g:jedi#popup_on_dot = 0
+
+
 """""""""""""""
 " - Hotkeys - "
 """""""""""""""
@@ -224,6 +233,9 @@ set foldlevel=99
 """""""""""""""""""""""""""""""
 " - Omni complete functions - "
 """""""""""""""""""""""""""""""
+" OmniComplete to F2
+imap <f2> <c-x><c-o>
+" (Ommicomplete) for specific files
 autocmd FileType python set omnifunc=pythoncomplete#Complete
 autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
