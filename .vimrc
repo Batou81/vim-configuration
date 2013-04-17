@@ -20,19 +20,18 @@ Bundle 'tpope/vim-ragtag'
 Bundle 'tpope/vim-surround'
 " Runtime files for Haml, Sass and Scss
 Bundle 'tpope/vim-haml'
-" Markdown preview
-Bundle 'waylan/vim-markdown-extra-preview'
 " Toggle comment/uncomment lines
 Bundle 'vim-scripts/tComment'
+" Pyflakes
+Bundle 'kevinw/pyflakes-vim'
 " jedi-vim autocomplete
 Bundle 'davidhalter/jedi-vim'
+"Markdown for vim"
+Bundle 'plasticboy/vim-markdown'
 " Handle the expansion to full HTML code 
 Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
-" vim-scripts repos
-" L9 Vim-script library
-Bundle 'L9'
-" FuzzyFinder
-Bundle 'FuzzyFinder'
+" ConqueShell
+Bundle 'rosenfeld/conque-term'
 " PEP8
 Bundle 'vim-scripts/pep8.git'
 " Others repos
@@ -75,19 +74,12 @@ colorscheme slate
 """""""""""""""""""""""""
 " Set 7 lines to the cursors - when moving vertical..
 set so=7
-
 set showmode " Show what mode you're in
-
 set title " Set terminal title
-
 set number " Set linenumber
-
 set wildmenu "Turn on WiLd menu
-
 set ruler "Always show current position
-
 set cmdheight=2 "The commandbar height
-
 set hid "Change buffer - without saving
 
 " Set backspace config
@@ -101,8 +93,6 @@ set hlsearch "Highlight search things
 
 set incsearch "Make search act like search in modern browsers
 set nolazyredraw "Don't redraw while executing macros
-
-set magic "Set magic on, for regular expressions
 
 set showmatch "Show matching bracets when text indicator is over them
 set mat=2 "How many tenths of a second to blink
@@ -145,6 +135,8 @@ set noswapfile
 set expandtab
 set shiftwidth=4
 set tabstop=4
+set sw=4
+set modeline
 set smarttab
 
 set lbr
@@ -160,6 +152,7 @@ set wrap "Wrap lines
 """"""""""""""""""""
 let g:jedi#auto_initialization = 1
 let g:jedi#popup_on_dot = 0
+let g:jedi#show_function_definition = "0"
 
 
 """""""""""""""
@@ -169,10 +162,10 @@ let g:jedi#popup_on_dot = 0
 nmap <leader>w :w<cr>
 " Fast quit
 nmap <leader>q :q<cr>
-" Quit all
-nmap <leader>qa :wqa<cr>
 " Clear search
 nmap <silent> <leader>n :silent :nohlsearch<cr>
+" <leader>w to remove trailing whitespace
+nmap <leader> :%s/\s\+$//<CR>:let @/=''<CR>
 " Tab configuration
 map <leader>tn :tabnew<cr>
 map <leader>te :tabedit
@@ -187,8 +180,6 @@ inoremap <C-j> <Down>
 let g:ragtag_global_maps = 1
 " Allow the . to execute once for echa line of a visual selection
 vnoremap . :normal .<CR>
-" ACK
-nmap <leader>a <Esc>:Ack!
 " PEP8
 let g:pep8_map='<leader>8'
 
@@ -249,8 +240,23 @@ set completeopt=menuone,longest,preview
 """"""""""""""
 " - Syntax - "
 """"""""""""""
+" Use markdown syntax for .md files
+au BufNewFile,BufRead *.md set filetype=markdown
 " Use javascript syntax for .db files (for MongoDB files)
 au BufNewFile,BufRead *.db set filetype=javascript
+
+" Show trailing whitespaces on blue
+hi TrailWhitespace ctermbg=blue guibg=blue
+match TrailWhitespace /\s\+$\| \+\ze\t/
+
+" Spell errors (for spellcheck and others such as pyflakes) with underline
+hi clear SpellBad
+hi SpellBad cterm=underline ctermfg=red gui=undercurl guisp=Red
+" Python specific settings
+au Filetype python setlocal foldmethod=indent
+au Filetype python setlocal nofoldenable
+au Filetype python highligh OverLength ctermbg=darkgray guibg=darkgray
+au Filetype python match OverLength /\%79v.\+/
 
 
 """"""""""""""""""""
