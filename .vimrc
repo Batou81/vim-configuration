@@ -15,6 +15,8 @@ Bundle 'gmarik/vundle'
 Bundle 'tpope/vim-fugitive'
 " Ragtag - HTML/XML mappings
 Bundle 'tpope/vim-ragtag'
+" Powerline
+Bundle 'Lokaltog/powerline'
 " The plugin provides mappings to easily delete, change and add such
 " surroundings in pairs
 Bundle 'tpope/vim-surround'
@@ -26,9 +28,16 @@ Bundle 'vim-scripts/tComment'
 Bundle 'kevinw/pyflakes-vim'
 " jedi-vim autocomplete
 Bundle 'davidhalter/jedi-vim'
+" Supertab autocomplete
+Bundle 'ervandew/supertab'
+" Scala Plugins
+" VIM Scala
+Bundle 'derekwyatt/vim-scala'
+" SBT Vim
+Bundle 'ktvoelker/sbt-vim'
 "Markdown for vim"
 Bundle 'plasticboy/vim-markdown'
-" Handle the expansion to full HTML code 
+" Handle the expansion to full HTML code
 Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
 " ConqueShell
 Bundle 'rosenfeld/conque-term'
@@ -36,6 +45,11 @@ Bundle 'rosenfeld/conque-term'
 Bundle 'vim-scripts/pep8.git'
 " Others repos
 
+"""""""""""""""""
+" - Powerline - "
+"""""""""""""""""
+set rtp+=~/.vim/bundle/powerline/powerline/bindings/vim
+set noshowmode
 
 """""""""""""""
 " - General - "
@@ -104,6 +118,17 @@ set vb t_vb=
 au GUIEnter * set vb t_vb=
 set tm=500
 
+" highlight unwanted(trailing) whitespace
+" + have this highlighting not appear whilst you are typing in insert mode
+" + have the highlighting of whitespace apply when you open new buffers
+" http://vim.wikia.com/wiki/Highlight_unwanted_spaces
+:highlight ExtraWhitespace ctermbg=red guibg=red
+:autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
+autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+autocmd BufWinLeave * call clearmatches()
+
 
 """""""""""""""""""""""
 " - Color and fonts - "
@@ -164,8 +189,8 @@ nmap <leader>w :w<cr>
 nmap <leader>q :q<cr>
 " Clear search
 nmap <silent> <leader>n :silent :nohlsearch<cr>
-" <leader>w to remove trailing whitespace
-nmap <leader> :%s/\s\+$//<CR>:let @/=''<CR>
+" <leader>tw to remove trailing whitespace
+nmap <leader>tw :%s/\s\+$//<CR>:let @/=''<CR>
 " Tab configuration
 map <leader>tn :tabnew<cr>
 map <leader>te :tabedit
@@ -246,8 +271,8 @@ au BufNewFile,BufRead *.md set filetype=markdown
 au BufNewFile,BufRead *.db set filetype=javascript
 
 " Show trailing whitespaces on blue
-hi TrailWhitespace ctermbg=blue guibg=blue
-match TrailWhitespace /\s\+$\| \+\ze\t/
+" hi TrailWhitespace ctermbg=blue guibg=blue
+" match TrailWhitespace /\s\+$\| \+\ze\t/
 
 " Spell errors (for spellcheck and others such as pyflakes) with underline
 hi clear SpellBad
@@ -257,6 +282,23 @@ au Filetype python setlocal foldmethod=indent
 au Filetype python setlocal nofoldenable
 au Filetype python highligh OverLength ctermbg=darkgray guibg=darkgray
 au Filetype python match OverLength /\%79v.\+/
+
+" Scala specific settings
+au Filetype scala set shiftwidth=2
+au Filetype scala set tabstop=2
+au Filetype scala set sw=2
+
+" Add the virtualenv's site-packages to vim path
+py << EOF
+import os.path
+import sys
+import vim
+if 'VIRTUAL_ENV' in os.environ:
+    project_base_dir = os.environ['VIRTUAL_ENV']
+    sys.path.insert(0, project_base_dir)
+    activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
+    execfile(activate_this, dict(__file__=activate_this))
+EOF
 
 
 """"""""""""""""""""
